@@ -366,16 +366,35 @@ footer a { color: var(--cream-dim); }
   flex-wrap: wrap;
   justify-content: center;
 }
-.manual-form input {
-  width: 130px;
-  padding: 8px 10px;
-  border-radius: 8px;
+.coord-field {
+  display: flex;
   border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
   background: var(--dust-dark);
+}
+.manual-form input {
+  width: 110px;
+  padding: 8px 10px;
+  border: none;
+  background: transparent;
   color: var(--cream);
   font-size: 0.82rem;
 }
-.manual-form button {
+.manual-form input:focus {
+  outline: none;
+}
+.sign-toggle {
+  padding: 8px 10px;
+  border: none;
+  border-right: 1px solid var(--line);
+  background: var(--dust-panel);
+  color: var(--ember-bright);
+  font-weight: 800;
+  font-size: 0.78rem;
+  min-width: 30px;
+}
+.manual-form button:not(.sign-toggle) {
   padding: 8px 12px;
   border-radius: 8px;
   border: none;

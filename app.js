@@ -69,6 +69,8 @@
     manualBanner: $('manual-banner'),
     manualLat: $('manual-lat'),
     manualLng: $('manual-lng'),
+    manualLatSign: $('manual-lat-sign'),
+    manualLngSign: $('manual-lng-sign'),
     manualSet: $('manual-set'),
     modeNearest: $('mode-nearest'),
     modeMan: $('mode-man'),
@@ -233,10 +235,25 @@
     });
   }
 
+  // iOS's decimal keypad has no minus key, so sign is a separate toggle
+  // rather than something typed. Any "-" a user does manage to type
+  // (e.g. on Android) is normalized away via Math.abs — the toggle wins.
+  function bindSignToggle(btn, positiveLabel, negativeLabel) {
+    btn.addEventListener('click', () => {
+      const next = Number(btn.dataset.sign) === 1 ? -1 : 1;
+      btn.dataset.sign = String(next);
+      btn.textContent = next === 1 ? positiveLabel : negativeLabel;
+    });
+  }
+  bindSignToggle(els.manualLatSign, 'N', 'S');
+  bindSignToggle(els.manualLngSign, 'E', 'W');
+
   els.manualSet.addEventListener('click', () => {
-    const lat = parseFloat(els.manualLat.value);
-    const lng = parseFloat(els.manualLng.value);
-    if (isNaN(lat) || isNaN(lng)) return;
+    const latMag = Math.abs(parseFloat(els.manualLat.value));
+    const lngMag = Math.abs(parseFloat(els.manualLng.value));
+    if (isNaN(latMag) || isNaN(lngMag)) return;
+    const lat = latMag * Number(els.manualLatSign.dataset.sign);
+    const lng = lngMag * Number(els.manualLngSign.dataset.sign);
     state.userPos = { lat, lng, accuracy: 9999 };
     els.gpsDot.className = 'dot warn';
     els.gpsStatus.textContent = 'GPS: manual';

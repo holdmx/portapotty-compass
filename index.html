@@ -36,8 +36,14 @@
   <div style="width:100%">
     <span id="manual-text">No GPS signal. Enter coordinates manually (e.g. for testing):</span>
     <div class="manual-form">
-      <input id="manual-lat" type="text" inputmode="decimal" placeholder="lat, e.g. 40.7869" />
-      <input id="manual-lng" type="text" inputmode="decimal" placeholder="lng, e.g. -119.2029" />
+      <div class="coord-field">
+        <button type="button" class="sign-toggle" id="manual-lat-sign" data-sign="1" aria-label="Toggle latitude N/S">N</button>
+        <input id="manual-lat" type="text" inputmode="decimal" placeholder="lat, e.g. 40.7869" />
+      </div>
+      <div class="coord-field">
+        <button type="button" class="sign-toggle" id="manual-lng-sign" data-sign="-1" aria-label="Toggle longitude E/W">W</button>
+        <input id="manual-lng" type="text" inputmode="decimal" placeholder="lng, e.g. 119.2029" />
+      </div>
       <button id="manual-set" type="button">Set</button>
     </div>
   </div>
