@@ -68,7 +68,7 @@ header .sub {
   justify-content: space-between;
 }
 
-.banner.hidden { display: none; }
+.hidden { display: none; }
 
 .banner button {
   background: var(--ember);
