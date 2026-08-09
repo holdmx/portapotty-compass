@@ -1,15 +1,15 @@
 // The Golden Compass — offline cache
 // Bump CACHE_NAME when app files change to force clients to refresh.
-const CACHE_NAME = 'playa-compass-v6';
+const CACHE_NAME = 'playa-compass-v7';
 // style.css/app.js/data.js are requested with a ?v= query from index.html
 // (bump both together when editing those files) so the cache API's
 // exact-URL match can't silently serve a stale copy after an update.
 const ASSETS = [
   './',
   './index.html',
-  './style.css?v=6',
-  './app.js?v=6',
-  './data.js?v=6',
+  './style.css?v=7',
+  './app.js?v=7',
+  './data.js?v=7',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
