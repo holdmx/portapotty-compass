@@ -1,15 +1,27 @@
 :root {
-  --dust-dark: #201409;
-  --dust-mid: #3a2414;
-  --dust-panel: #2b1a0e;
-  --ember: #e2703a;
-  --ember-bright: #ff9153;
-  --cream: #fff3df;
-  --cream-dim: #cbb79a;
-  --ok: #7fbf6a;
-  --warn: #e0b23a;
-  --bad: #d9614f;
-  --line: rgba(255, 243, 223, 0.14);
+  /* Palette */
+  --black: #000000;
+  --flame: #F58840;
+  --rust: #B85252;
+  --bone: #EADEDE;
+
+  /* Semantic roles. Surfaces and dimmed text are the palette's own colours at
+     low alpha over black rather than new hues, so nothing strays off-palette. */
+  --dust-dark: var(--black);
+  --dust-panel: #100e0e;                    /* ~6% bone over black */
+  --ember: var(--flame);
+  --ember-bright: var(--flame);
+  --cream: var(--bone);
+  --cream-dim: rgba(234, 222, 222, 0.62);
+  --line: rgba(234, 222, 222, 0.14);
+  --on-accent: var(--black);                /* text sitting on flame */
+
+  /* No green in this palette, so "good" reads as plain bone rather than an
+     imported hue: bone = fine, flame = caution, rust = bad. */
+  --ok: var(--bone);
+  --warn: var(--flame);
+  --bad: var(--rust);
+
   color-scheme: dark;
 }
 
@@ -22,7 +34,7 @@ html, body {
 }
 
 body {
-  background: radial-gradient(ellipse at 50% -10%, #4a2c15 0%, var(--dust-dark) 55%, #150c05 100%);
+  background: radial-gradient(ellipse at 50% -10%, rgba(245, 136, 64, 0.18) 0%, var(--black) 58%, var(--black) 100%);
   color: var(--cream);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   min-height: 100%;
@@ -73,7 +85,7 @@ header .sub {
 
 .banner button {
   background: var(--ember);
-  color: #1a0f06;
+  color: var(--on-accent);
   border: none;
   border-radius: 8px;
   padding: 8px 12px;
@@ -82,8 +94,8 @@ header .sub {
   white-space: nowrap;
 }
 
-.banner.error { border-color: rgba(217, 97, 79, 0.5); color: var(--bad); }
-.banner.warn { border-color: rgba(224, 178, 58, 0.5); color: var(--warn); }
+.banner.error { border-color: rgba(184, 82, 82, 0.5); color: var(--bad); }
+.banner.warn { border-color: rgba(245, 136, 64, 0.5); color: var(--warn); }
 
 main {
   flex: 1;
@@ -139,11 +151,13 @@ main {
   fill: var(--cream);
 }
 
+/* Rust here separates "you" from the flame-coloured trail leaving you, so the
+   two never read as the same object. */
 .you-ring {
   fill: none;
-  stroke: var(--cream);
-  stroke-width: 1.5;
-  opacity: 0.25;
+  stroke: var(--rust);
+  stroke-width: 2;
+  opacity: 0.85;
 }
 
 /* Shown only once you are essentially on top of the bank, where GPS noise
@@ -223,7 +237,7 @@ main {
 .mode-row button.active {
   background: var(--ember);
   border-color: var(--ember);
-  color: #1a0f06;
+  color: var(--on-accent);
 }
 
 .status-strip {
@@ -290,7 +304,7 @@ main {
 
 .bank-row.selected {
   border-color: var(--ember);
-  background: linear-gradient(0deg, rgba(226,112,58,0.16), rgba(226,112,58,0.16)), var(--dust-panel);
+  background: linear-gradient(0deg, rgba(245,136,64,0.16), rgba(245,136,64,0.16)), var(--dust-panel);
 }
 
 .bank-row .name {
@@ -351,7 +365,7 @@ footer a { color: var(--cream-dim); }
 
 .unit-toggle button.active {
   background: var(--ember);
-  color: #1a0f06;
+  color: var(--on-accent);
 }
 
 .header-row {
@@ -399,7 +413,7 @@ footer a { color: var(--cream-dim); }
   border-radius: 8px;
   border: none;
   background: var(--ember);
-  color: #1a0f06;
+  color: var(--on-accent);
   font-weight: 700;
   font-size: 0.8rem;
 }
