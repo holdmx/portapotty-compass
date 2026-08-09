@@ -33,16 +33,17 @@ body {
 }
 
 header {
-  padding: 14px 18px 6px;
+  padding: 14px 96px 6px 18px;
   text-align: center;
 }
 
 header h1 {
   margin: 0;
-  font-size: 1.15rem;
+  font-size: clamp(0.92rem, 5.5vw, 1.15rem);
   letter-spacing: 0.02em;
   font-weight: 700;
   color: var(--cream);
+  white-space: nowrap;
 }
 
 header h1 .icon { filter: saturate(1.1); }

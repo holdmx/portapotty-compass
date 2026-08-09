@@ -1,4 +1,4 @@
-# Playa Compass 🚽🧭
+# The Golden Compass 🚽🧭
 
 A mobile, installable, offline compass that points to the nearest porta-potty
 ("John") bank in Black Rock City.
@@ -32,7 +32,10 @@ against on-playa signage, and swap in the new year's file once it drops:
 2. Compute polygon centroids (see the one-off script you'd write, or ask
    again next year — a `[lat, lng]` centroid per bank is all `data.js` needs).
 3. Replace the `TOILETS` array and bump `TOILET_YEAR` in `data.js`.
-4. Bump `CACHE_NAME` in `sw.js` so installed devices pick up the update.
+4. Bump `CACHE_NAME` in `sw.js`, **and** the matching `?v=` query on
+   `style.css`/`app.js`/`data.js` in both `index.html` and `sw.js`'s
+   `ASSETS` list, so installed devices (and browser HTTP caches generally)
+   pick up the update instead of serving a stale cached copy.
 
 ## Running it
 

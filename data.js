@@ -1,4 +1,4 @@
-// Playa Compass — data
+// The Golden Compass — data
 // Toilet ("John") bank locations sourced from the official Burning Man Project
 // GIS release: https://github.com/burningmantech/innovate-GIS-data (2025/GeoJSON/toilets.geojson)
 // Each bank was published as a footprint polygon; the coordinate below is that

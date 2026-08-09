@@ -1,4 +1,4 @@
-// Playa Compass — app logic
+// The Golden Compass — app logic
 (() => {
   'use strict';
 

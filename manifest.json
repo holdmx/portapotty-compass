@@ -1,6 +1,6 @@
 {
-  "name": "Playa Compass",
-  "short_name": "Playa Compass",
+  "name": "The Golden Compass",
+  "short_name": "Golden Compass",
   "description": "Offline compass pointing to the nearest Black Rock City toilet banks.",
   "start_url": "./index.html",
   "scope": "./",
