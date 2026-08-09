@@ -1,7 +1,7 @@
 # The Golden Compass 🚽🧭
 
 A mobile, installable, offline compass that points to the nearest porta-potty
-("John") bank in Black Rock City.
+("John") in Black Rock City.
 
 ## What it does
 
