@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="The Golden Compass" />
-<link rel="stylesheet" href="style.css?v=13" />
+<link rel="stylesheet" href="style.css?v=16" />
 </head>
 <body>
 
@@ -50,26 +50,33 @@
 </div>
 
 <main>
-  <div class="dial-wrap">
-    <div class="compass-ring"></div>
+  <div class="trail-wrap" id="trail-wrap">
+    <svg id="trail" viewBox="0 0 300 300" role="img" aria-label="Direction of travel to the selected toilet bank">
+      <defs>
+        <filter id="dotGlow" x="-160%" y="-160%" width="420%" height="420%">
+          <feGaussianBlur stdDeviation="4" result="b" />
+          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+      </defs>
 
-    <div class="compass-labels" id="compass-labels">
-      <span class="primary" style="left:50%; top:9%;">N</span>
-      <span style="left:91%; top:50%;">E</span>
-      <span class="primary" style="left:50%; top:91%;">S</span>
-      <span style="left:9%; top:50%;">W</span>
-    </div>
+      <!-- Rotates so the dots stream toward the target. Dots march "up" in
+           this group's own coordinates; the rotation aims them. -->
+      <g id="trail-field">
+        <g id="dots">
+          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
+          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
+          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
+          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
+          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
+          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
+          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
+        </g>
+      </g>
 
-    <div class="needle-wrap" id="needle-wrap">
-      <div class="needle">
-        <svg viewBox="0 0 180 180">
-          <polygon points="90,10 108,90 90,74 72,90" fill="#ff9153" />
-          <polygon points="90,170 108,90 90,106 72,90" fill="#fff3df" opacity="0.55" />
-        </svg>
-      </div>
-    </div>
-
-    <div class="center-hub"></div>
+      <circle class="arrived-pulse" cx="150" cy="150" r="26" />
+      <circle class="you-ring" cx="150" cy="150" r="15" />
+      <circle class="you" cx="150" cy="150" r="6.5" />
+    </svg>
   </div>
 
   <div class="readout">
@@ -103,7 +110,7 @@
   add to your home screen before you lose signal.
 </footer>
 
-<script src="data.js?v=13"></script>
-<script src="app.js?v=13"></script>
+<script src="data.js?v=16"></script>
+<script src="app.js?v=16"></script>
 </body>
 </html>

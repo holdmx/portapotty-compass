@@ -94,65 +94,83 @@ main {
   gap: 6px;
 }
 
-.dial-wrap {
+/* ---------- marching trail ---------- */
+/* Square because the trail can aim in any direction, so half of it reads as
+   empty at any given moment; kept modest to stop that dominating the screen. */
+.trail-wrap {
   position: relative;
-  width: min(78vw, 340px);
+  width: min(68vw, 290px);
   aspect-ratio: 1;
-  margin: 6px auto 0;
+  margin: 0 auto;
 }
 
-.compass-ring {
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle at 50% 38%, rgba(255,145,83,0.16), transparent 60%),
-    var(--dust-panel);
-  border: 2px solid var(--line);
-  box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 8px 30px rgba(0,0,0,0.45);
+#trail {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-.compass-labels {
-  position: absolute;
-  inset: 0;
+#trail-field {
+  transform-origin: 150px 150px;
+  /* Same shortest-path rotation problem as the old needle: see rotateTrail(). */
+  transition: transform 160ms cubic-bezier(.2, .7, .3, 1);
 }
 
-.compass-labels span {
-  position: absolute;
-  color: var(--cream-dim);
-  font-size: 0.78rem;
-  font-weight: 700;
-  transform: translate(-50%, -50%);
-}
-.compass-labels span.primary { color: var(--cream); font-size: 0.95rem; }
-
-.needle-wrap {
-  position: absolute;
-  inset: 0;
-  transition: transform 140ms cubic-bezier(.2,.7,.3,1);
+/* Dots stream away from you along this group's -Y axis; the field's rotation
+   is what aims them. animation-duration/delay are set from JS so the trail
+   marches faster the closer you get. */
+/* Named trail-dot, not dot: the status strip already owns .dot. */
+.trail-dot {
+  fill: var(--ember-bright);
+  filter: url(#dotGlow);
+  animation-name: march;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
-.needle {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 0;
-  height: 0;
+@keyframes march {
+  0%   { transform: translateY(-30px);  opacity: 0; }
+  16%  { opacity: 1; }
+  70%  { opacity: 0.9; }
+  100% { transform: translateY(-146px); opacity: 0; }
 }
 
-.needle svg { position: absolute; left: -90px; top: -90px; width: 180px; height: 180px; overflow: visible; }
+.you {
+  fill: var(--cream);
+}
 
-.center-hub {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 14px;
-  height: 14px;
-  margin: -7px 0 0 -7px;
-  border-radius: 50%;
-  background: var(--cream);
-  box-shadow: 0 0 0 4px var(--dust-dark), 0 0 10px rgba(255,145,83,0.6);
-  z-index: 3;
+.you-ring {
+  fill: none;
+  stroke: var(--cream);
+  stroke-width: 1.5;
+  opacity: 0.25;
+}
+
+/* Shown only once you are essentially on top of the bank, where GPS noise
+   makes the bearing meaningless and a spinning trail would be nonsense. */
+.arrived-pulse {
+  fill: none;
+  stroke: var(--ember-bright);
+  stroke-width: 2.5;
+  transform-origin: 150px 150px;
+  opacity: 0;
+}
+
+.arrived #dots { display: none; }
+
+.arrived .arrived-pulse {
+  animation: arrived 1.8s ease-out infinite;
+}
+
+@keyframes arrived {
+  0%   { transform: scale(0.5); opacity: 0.9; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trail-dot { animation: none; opacity: 0.9; }
+  .arrived .arrived-pulse { animation: none; opacity: 0.6; }
+  #trail-field { transition: none; }
 }
 
 .readout {

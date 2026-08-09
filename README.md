@@ -5,8 +5,11 @@ A mobile, installable, offline compass that points to the nearest porta-potty
 
 ## What it does
 
-- Uses your phone's GPS + magnetometer to draw a live compass needle pointing
-  at the nearest toilet bank (or "The Man", or any bank you pick from the list).
+- Uses your phone's GPS + magnetometer to stream a trail of glowing dots in
+  the direction you need to walk to reach the nearest toilet bank (or "The
+  Man", or any bank you pick from the list). The trail marches faster the
+  closer you get, and hands over to a "you're here" pulse in the last few
+  metres, where GPS noise makes the bearing meaningless anyway.
 - Shows distance in feet or meters (tap the unit badge, top right).
 - Works **fully offline** once loaded — all 45 bank locations are baked into
   `data.js`, no network calls at runtime. Install it to your home screen

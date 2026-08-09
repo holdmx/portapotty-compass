@@ -53,7 +53,9 @@
   // ---------- DOM ----------
   const $ = id => document.getElementById(id);
   const els = {
-    needleWrap: $('needle-wrap'),
+    trailWrap: $('trail-wrap'),
+    trailField: $('trail-field'),
+    dots: Array.from(document.querySelectorAll('#dots .trail-dot')),
     distanceVal: $('distance-val'),
     distanceUnit: $('distance-unit'),
     targetLabel: $('target-label'),
@@ -211,18 +213,46 @@
     });
   }
 
-  // ---------- rendering ----------
+  // ---------- marching trail ----------
   // CSS interpolates rotate() numerically, so handing it a value that wraps
-  // (359deg -> 1deg) animates the needle backwards almost all the way round.
+  // (359deg -> 1deg) swings the trail backwards almost all the way round.
   // That fired constantly, because the wrap happens exactly when the target
   // passes straight ahead. Keep an unwrapped running angle instead and always
   // move by the shortest signed delta.
-  let needleAngle = 0;
-  function pointNeedle(deg) {
-    const delta = ((deg - needleAngle) % 360 + 540) % 360 - 180;
-    needleAngle += delta;
-    els.needleWrap.style.transform = `rotate(${needleAngle}deg)`;
+  let trailAngle = 0;
+  function rotateTrail(deg) {
+    const delta = ((deg - trailAngle) % 360 + 540) % 360 - 180;
+    trailAngle += delta;
+    els.trailField.style.transform = `rotate(${trailAngle}deg)`;
   }
+
+  // The trail marches faster the closer you are. Quantised into bands so the
+  // animation is not restarted on every GPS tick — reassigning duration mid
+  // cycle makes the dots visibly stutter.
+  const MARCH_BANDS = [
+    { within: 25, seconds: 0.7 },
+    { within: 60, seconds: 0.9 },
+    { within: 150, seconds: 1.15 },
+    { within: 300, seconds: 1.45 },
+    { within: 600, seconds: 1.8 },
+    { within: Infinity, seconds: 2.2 },
+  ];
+  let marchSeconds = null;
+  function setMarchSpeed(meters) {
+    const seconds = MARCH_BANDS.find((b) => meters <= b.within).seconds;
+    if (seconds === marchSeconds) return;
+    marchSeconds = seconds;
+    // Even stagger keeps the dots equally spaced along the trail whatever the
+    // speed, so the delays have to be recomputed with the duration.
+    els.dots.forEach((dot, i) => {
+      dot.style.animationDuration = `${seconds}s`;
+      dot.style.animationDelay = `${-(i / els.dots.length) * seconds}s`;
+    });
+  }
+
+  // Inside this radius the bearing is mostly GPS noise and the trail would
+  // spin uselessly, so switch to a calm "you're here" pulse instead.
+  const ARRIVED_M = 12;
 
   function render() {
     const target = currentTarget();
@@ -246,19 +276,27 @@
     }
 
     if (state.userPos) {
+      const dist = target._dist != null ? target._dist : Infinity;
+      const arrived = dist <= ARRIVED_M;
+      els.trailWrap.classList.toggle('arrived', arrived);
+      setMarchSpeed(dist);
+
+      if (arrived) {
+        els.metaLabel.textContent = 'You should be standing at it';
+        return;
+      }
+
       const brg = bearing(state.userPos.lat, state.userPos.lng, target.lat, target.lng);
-      // The dial face (N/E/S/W) stays fixed — only the needle turns, showing
-      // where the target is relative to the way the phone is currently
-      // pointed. (Rotating the dial too, by -heading, would cancel out the
-      // needle's own -heading term and make it look frozen relative to the
-      // ring as you turned in place — that was the bug.)
+      // Dots stream "up" within the field, so rotating the field by the
+      // relative bearing aims them the way you actually have to walk.
       if (state.heading != null) {
-        pointNeedle((brg - state.heading + 360) % 360);
+        rotateTrail((brg - state.heading + 360) % 360);
         els.metaLabel.textContent = `Bearing ${Math.round(brg)}° · Heading ${Math.round(state.heading)}°`;
       } else {
-        // No compass sensor: show absolute bearing, dial stays N-up.
-        pointNeedle(brg);
-        els.metaLabel.textContent = `Bearing ${Math.round(brg)}° from true north (align phone manually)`;
+        // No compass: the trail can only be drawn relative to true north, so
+        // say so rather than implying the top of the screen is your facing.
+        rotateTrail(brg);
+        els.metaLabel.textContent = `Bearing ${Math.round(brg)}° from true north · trail is north-up`;
       }
     }
   }
