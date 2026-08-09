@@ -1,6 +1,6 @@
 // Playa Compass — offline cache
 // Bump CACHE_NAME when app files change to force clients to refresh.
-const CACHE_NAME = 'playa-compass-v4';
+const CACHE_NAME = 'playa-compass-v5';
 const ASSETS = [
   './',
   './index.html',

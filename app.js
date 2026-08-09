@@ -187,15 +187,18 @@
 
     if (state.userPos) {
       const brg = bearing(state.userPos.lat, state.userPos.lng, target.lat, target.lng);
+      // The dial face (N/E/S/W) stays fixed — only the needle turns, showing
+      // where the target is relative to the way the phone is currently
+      // pointed. (Rotating the dial too, by -heading, would cancel out the
+      // needle's own -heading term and make it look frozen relative to the
+      // ring as you turned in place — that was the bug.)
       if (state.heading != null) {
         const rel = (brg - state.heading + 360) % 360;
         els.needleWrap.style.transform = `rotate(${rel}deg)`;
-        els.labels.style.transform = `rotate(${-state.heading}deg)`;
         els.metaLabel.textContent = `Bearing ${Math.round(brg)}° · Heading ${Math.round(state.heading)}°`;
       } else {
         // No compass sensor: show absolute bearing, dial stays N-up.
         els.needleWrap.style.transform = `rotate(${brg}deg)`;
-        els.labels.style.transform = 'rotate(0deg)';
         els.metaLabel.textContent = `Bearing ${Math.round(brg)}° from true north (align phone manually)`;
       }
     }
