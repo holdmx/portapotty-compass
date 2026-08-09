@@ -101,27 +101,6 @@ main {
   margin: 6px auto 0;
 }
 
-.dial-fixed {
-  position: absolute;
-  inset: 0;
-}
-
-.dial-ticks {
-  position: absolute;
-  inset: 0;
-  transition: transform 120ms linear;
-}
-
-.dial-ticks .tick {
-  position: absolute;
-  left: 50%;
-  top: 6px;
-  width: 2px;
-  height: 12px;
-  background: var(--cream-dim);
-  transform-origin: 50% calc(50vw * 0 + 164px);
-}
-
 .compass-ring {
   position: absolute;
   inset: 0;
@@ -136,7 +115,6 @@ main {
 .compass-labels {
   position: absolute;
   inset: 0;
-  transition: transform 120ms linear;
 }
 
 .compass-labels span {
@@ -160,18 +138,6 @@ main {
   top: 50%;
   width: 0;
   height: 0;
-}
-
-.needle .arrow {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  bottom: 2px;
-  width: 0;
-  height: 0;
-  border-left: 15px solid transparent;
-  border-right: 15px solid transparent;
-  border-bottom: 40% + 0px solid var(--ember-bright);
 }
 
 .needle svg { position: absolute; left: -90px; top: -90px; width: 180px; height: 180px; overflow: visible; }
@@ -277,6 +243,20 @@ main {
   letter-spacing: 0.06em;
   color: var(--cream-dim);
   margin: 6px 4px;
+}
+
+/* Flex column so rows can be reordered by rank with `order`, leaving the DOM
+   nodes themselves untouched (see updateList in app.js). */
+#bank-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-empty {
+  color: var(--cream-dim);
+  font-size: 0.8rem;
+  padding: 8px;
+  margin: 0;
 }
 
 .bank-row {

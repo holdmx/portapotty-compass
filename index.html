@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="The Golden Compass" />
-<link rel="stylesheet" href="style.css?v=9" />
+<link rel="stylesheet" href="style.css?v=11" />
 </head>
 <body>
 
@@ -79,7 +79,7 @@
   </div>
 
   <div class="mode-row">
-    <button id="mode-nearest" class="active" type="button">Nearest bank</button>
+    <button id="mode-nearest" class="active" type="button">Nearest 🚽</button>
     <button id="mode-man" type="button">The Man</button>
     <button id="mode-list" type="button">Choose bank…</button>
   </div>
@@ -91,6 +91,7 @@
 
   <div class="list-panel hidden" id="list-panel">
     <h2>All banks, nearest first</h2>
+    <p class="list-empty" id="list-empty">Waiting for GPS to sort by distance…</p>
     <div id="bank-list"></div>
   </div>
 </main>
@@ -102,7 +103,7 @@
   add to your home screen before you lose signal.
 </footer>
 
-<script src="data.js?v=9"></script>
-<script src="app.js?v=9"></script>
+<script src="data.js?v=11"></script>
+<script src="app.js?v=11"></script>
 </body>
 </html>

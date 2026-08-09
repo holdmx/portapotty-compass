@@ -54,7 +54,6 @@
   const $ = id => document.getElementById(id);
   const els = {
     needleWrap: $('needle-wrap'),
-    labels: $('compass-labels'),
     distanceVal: $('distance-val'),
     distanceUnit: $('distance-unit'),
     targetLabel: $('target-label'),
@@ -77,6 +76,7 @@
     modeList: $('mode-list'),
     listPanel: $('list-panel'),
     bankList: $('bank-list'),
+    listEmpty: $('list-empty'),
     unitFt: $('unit-ft'),
     unitM: $('unit-m'),
   };
@@ -84,9 +84,9 @@
   // ---------- unit handling ----------
   function fmtDistance(meters) {
     if (state.unit === 'ft') {
-      const ft = meters * 3.28084;
-      if (ft >= 1000) return { val: (ft / 1000).toFixed(2), unit: 'k ft' };
-      return { val: Math.round(ft).toString(), unit: 'ft' };
+      // Plain feet all the way up. The whole city fits inside ~7000ft, and
+      // "1.42 k ft" (kilofeet) is not a unit anyone reads at a glance.
+      return { val: Math.round(meters * 3.28084).toLocaleString('en-US'), unit: 'ft' };
     }
     if (meters >= 1000) return { val: (meters / 1000).toFixed(2), unit: 'km' };
     return { val: Math.round(meters).toString(), unit: 'm' };
@@ -98,7 +98,7 @@
     els.unitFt.classList.toggle('active', unit === 'ft');
     els.unitM.classList.toggle('active', unit === 'm');
     render();
-    if (!els.listPanel.classList.contains('hidden')) renderList();
+    if (listVisible()) updateList();
   }
 
   els.unitFt.addEventListener('click', () => setUnit('ft'));
@@ -124,55 +124,114 @@
     return nearestTarget();
   }
 
+  const listVisible = () => !els.listPanel.classList.contains('hidden');
+
   els.modeNearest.addEventListener('click', () => setMode('nearest'));
   els.modeMan.addEventListener('click', () => setMode('man'));
   els.modeList.addEventListener('click', () => {
-    const showing = !els.listPanel.classList.contains('hidden');
+    const showing = listVisible();
     els.listPanel.classList.toggle('hidden', showing);
     els.modeList.classList.toggle('active', !showing);
-    if (!showing) renderList();
+    if (!showing) updateList();
   });
 
   function setMode(mode) {
     state.mode = mode;
     els.modeNearest.classList.toggle('active', mode === 'nearest');
     els.modeMan.classList.toggle('active', mode === 'man');
+    // Leaving 'chosen' clears the highlighted row, so refresh an open list —
+    // otherwise it kept highlighting a bank the compass was no longer aimed at.
+    if (listVisible()) updateList();
     render();
   }
 
-  function renderList() {
-    if (!state.userPos) {
-      els.bankList.innerHTML = '<p style="color:var(--cream-dim);font-size:0.8rem;padding:8px;">Waiting for GPS to sort by distance…</p>';
-      return;
+  // ---------- bank list ----------
+  // Rows are created once and thereafter only updated in place. Rebuilding all
+  // 45 rows on every GPS tick meant the list could reorder between touchstart
+  // and click, so a tap landed on whichever bank had slid under the finger.
+  // Ranking is applied via CSS `order`, which reorders visually without moving
+  // any DOM node.
+  const rowById = new Map();
+
+  function buildList() {
+    for (const t of ALL_TARGETS) {
+      const row = document.createElement('div');
+      row.className = 'bank-row';
+      row.dataset.id = String(t.id);
+
+      const name = document.createElement('span');
+      name.className = 'name';
+      name.textContent = t.label;
+
+      const tag = document.createElement('span');
+      tag.className = 'tag hidden';
+      tag.textContent = 'NEAREST';
+      name.appendChild(tag);
+
+      const dist = document.createElement('span');
+      dist.className = 'dist';
+      dist.textContent = '—';
+
+      row.append(name, dist);
+      els.bankList.appendChild(row);
+      rowById.set(t.id, { row, dist, tag });
     }
-    const withDist = ALL_TARGETS.map(t => ({ ...t, _dist: haversine(state.userPos.lat, state.userPos.lng, t.lat, t.lng) }));
-    withDist.sort((a, b) => a._dist - b._dist);
-    els.bankList.innerHTML = withDist.map((t, i) => {
-      const d = fmtDistance(t._dist);
-      const selected = state.mode === 'chosen' && state.chosenId === t.id;
-      const tag = i === 0 ? '<span class="tag">NEAREST</span>' : '';
-      return `<div class="bank-row${selected ? ' selected' : ''}" data-id="${t.id}">
-        <span class="name">${t.label}${tag}</span>
-        <span class="dist">${d.val} ${d.unit}</span>
-      </div>`;
-    }).join('');
-    els.bankList.querySelectorAll('.bank-row').forEach(row => {
-      row.addEventListener('click', () => {
-        state.chosenId = Number(row.dataset.id);
-        state.mode = 'chosen';
-        els.modeNearest.classList.remove('active');
-        els.modeMan.classList.remove('active');
-        renderList();
-        render();
-      });
+  }
+
+  // Delegated, so it is registered once and survives in-place updates.
+  els.bankList.addEventListener('click', (e) => {
+    const row = e.target.closest('.bank-row');
+    if (!row) return;
+    state.chosenId = Number(row.dataset.id);
+    state.mode = 'chosen';
+    els.modeNearest.classList.remove('active');
+    els.modeMan.classList.remove('active');
+    updateList();
+    render();
+  });
+
+  function updateList() {
+    const hasFix = !!state.userPos;
+    els.listEmpty.classList.toggle('hidden', hasFix);
+    els.bankList.classList.toggle('hidden', !hasFix);
+    if (!hasFix) return;
+
+    const ranked = ALL_TARGETS
+      .map(t => ({ id: t.id, dist: haversine(state.userPos.lat, state.userPos.lng, t.lat, t.lng) }))
+      .sort((a, b) => a.dist - b.dist);
+
+    ranked.forEach((entry, i) => {
+      const parts = rowById.get(entry.id);
+      if (!parts) return;
+      const d = fmtDistance(entry.dist);
+      parts.row.style.order = String(i);
+      parts.dist.textContent = `${d.val} ${d.unit}`;
+      parts.row.classList.toggle('selected', state.mode === 'chosen' && state.chosenId === entry.id);
+      parts.tag.classList.toggle('hidden', i !== 0);
     });
   }
 
   // ---------- rendering ----------
+  // CSS interpolates rotate() numerically, so handing it a value that wraps
+  // (359deg -> 1deg) animates the needle backwards almost all the way round.
+  // That fired constantly, because the wrap happens exactly when the target
+  // passes straight ahead. Keep an unwrapped running angle instead and always
+  // move by the shortest signed delta.
+  let needleAngle = 0;
+  function pointNeedle(deg) {
+    const delta = ((deg - needleAngle) % 360 + 540) % 360 - 180;
+    needleAngle += delta;
+    els.needleWrap.style.transform = `rotate(${needleAngle}deg)`;
+  }
+
   function render() {
     const target = currentTarget();
     if (!target) {
       els.targetLabel.textContent = 'Waiting for GPS…';
+      els.distanceVal.textContent = '--';
+      // Without this the placeholder kept the markup's hard-coded "ft" even
+      // when the user (or their locale) had selected meters.
+      els.distanceUnit.textContent = state.unit;
       return;
     }
     els.targetLabel.textContent = target.label;
@@ -183,6 +242,7 @@
       els.distanceUnit.textContent = d.unit;
     } else {
       els.distanceVal.textContent = '--';
+      els.distanceUnit.textContent = state.unit;
     }
 
     if (state.userPos) {
@@ -193,12 +253,11 @@
       // needle's own -heading term and make it look frozen relative to the
       // ring as you turned in place — that was the bug.)
       if (state.heading != null) {
-        const rel = (brg - state.heading + 360) % 360;
-        els.needleWrap.style.transform = `rotate(${rel}deg)`;
+        pointNeedle((brg - state.heading + 360) % 360);
         els.metaLabel.textContent = `Bearing ${Math.round(brg)}° · Heading ${Math.round(state.heading)}°`;
       } else {
         // No compass sensor: show absolute bearing, dial stays N-up.
-        els.needleWrap.style.transform = `rotate(${brg}deg)`;
+        pointNeedle(brg);
         els.metaLabel.textContent = `Bearing ${Math.round(brg)}° from true north (align phone manually)`;
       }
     }
@@ -215,7 +274,7 @@
     els.gpsDot.className = 'dot ' + (pos.coords.accuracy <= 15 ? 'ok' : pos.coords.accuracy <= 50 ? 'warn' : '');
     els.gpsStatus.textContent = `GPS: ±${Math.round(pos.coords.accuracy)}m`;
     els.manualBanner.classList.add('hidden');
-    if (els.listPanel && !els.listPanel.classList.contains('hidden')) renderList();
+    if (listVisible()) updateList();
     render();
   }
 
@@ -261,6 +320,7 @@
     els.gpsDot.className = 'dot warn';
     els.gpsStatus.textContent = 'GPS: manual';
     els.manualBanner.classList.add('hidden');
+    if (listVisible()) updateList();
     render();
   });
 
@@ -334,7 +394,8 @@
         els.compassStatus.textContent = 'Compass: unavailable';
       }
     }, 5000);
-    renderList();
+    buildList();
+    updateList();
     render();
   }
 
