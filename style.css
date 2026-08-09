@@ -33,7 +33,7 @@ body {
 }
 
 header {
-  padding: 14px 96px 6px 18px;
+  padding: 14px 18px 6px;
   text-align: center;
 }
 
@@ -330,7 +330,7 @@ footer a { color: var(--cream-dim); }
 
 .unit-toggle {
   position: absolute;
-  top: 12px;
+  top: 46px;
   right: 14px;
   display: flex;
   background: var(--dust-panel);
@@ -358,6 +358,7 @@ footer a { color: var(--cream-dim); }
 
 .header-row {
   position: relative;
+  padding-bottom: 30px;
 }
 
 .manual-form {
