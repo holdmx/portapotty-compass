@@ -1,7 +1,8 @@
 # The Golden Compass 🚽🧭
 
-A mobile, installable, offline compass that points to the nearest porta-potty
-("John") in Black Rock City.
+A mobile, installable, offline wayfinder that shows you which way to walk to
+the nearest porta-potty ("John") in Black Rock City. The name is the joke —
+there is no compass dial; it points with a marching trail of dots.
 
 ## What it does
 
@@ -10,7 +11,8 @@ A mobile, installable, offline compass that points to the nearest porta-potty
   Man", or any bank you pick from the list). The trail marches faster the
   closer you get, and hands over to a "you're here" pulse in the last few
   metres, where GPS noise makes the bearing meaningless anyway.
-- Shows distance in feet or meters (tap the unit badge, top right).
+- Shows distance in feet or meters (ft / m switch, top right). Defaults to
+  meters unless the browser's locale says otherwise; an explicit choice sticks.
 - Works **fully offline** once loaded — all 45 bank locations are baked into
   `data.js`, no network calls at runtime. Install it to your home screen
   before you leave signal.
