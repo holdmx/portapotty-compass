@@ -106,85 +106,23 @@ main {
   gap: 6px;
 }
 
-/* ---------- marching trail ---------- */
-/* Square because the trail can aim in any direction, so half of it reads as
-   empty at any given moment; kept modest to stop that dominating the screen. */
+/* ---------- pee-stream scene ---------- */
+/* Portrait: the first-person view needs headroom for the arc (bottom edge is
+   you, horizon near the top). All drawing happens on the canvas in app.js;
+   prefers-reduced-motion is honored there (static frame, no animation).
+   The stream's fluid colors live in app.js (PEE) — deliberately off-palette:
+   the palette has no yellow, and flame-as-pee does not read as pee. */
 .trail-wrap {
   position: relative;
-  width: min(68vw, 290px);
-  aspect-ratio: 1;
+  width: min(62vw, 264px);
+  aspect-ratio: 300 / 360;
   margin: 0 auto;
 }
 
-#trail {
+#scene {
   width: 100%;
   height: 100%;
-  overflow: visible;
-}
-
-#trail-field {
-  transform-origin: 150px 150px;
-  /* Same shortest-path rotation problem as the old needle: see rotateTrail(). */
-  transition: transform 160ms cubic-bezier(.2, .7, .3, 1);
-}
-
-/* Dots stream away from you along this group's -Y axis; the field's rotation
-   is what aims them. animation-duration/delay are set from JS so the trail
-   marches faster the closer you get. */
-/* Named trail-dot, not dot: the status strip already owns .dot. */
-.trail-dot {
-  fill: var(--ember-bright);
-  filter: url(#dotGlow);
-  animation-name: march;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-}
-
-@keyframes march {
-  0%   { transform: translateY(-30px);  opacity: 0; }
-  16%  { opacity: 1; }
-  70%  { opacity: 0.9; }
-  100% { transform: translateY(-146px); opacity: 0; }
-}
-
-.you {
-  fill: var(--cream);
-}
-
-/* Rust here separates "you" from the flame-coloured trail leaving you, so the
-   two never read as the same object. */
-.you-ring {
-  fill: none;
-  stroke: var(--rust);
-  stroke-width: 2;
-  opacity: 0.85;
-}
-
-/* Shown only once you are essentially on top of the bank, where GPS noise
-   makes the bearing meaningless and a spinning trail would be nonsense. */
-.arrived-pulse {
-  fill: none;
-  stroke: var(--ember-bright);
-  stroke-width: 2.5;
-  transform-origin: 150px 150px;
-  opacity: 0;
-}
-
-.arrived #dots { display: none; }
-
-.arrived .arrived-pulse {
-  animation: arrived 1.8s ease-out infinite;
-}
-
-@keyframes arrived {
-  0%   { transform: scale(0.5); opacity: 0.9; }
-  100% { transform: scale(3.2); opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .trail-dot { animation: none; opacity: 0.9; }
-  .arrived .arrived-pulse { animation: none; opacity: 0.6; }
-  #trail-field { transition: none; }
+  display: block;
 }
 
 .readout {
