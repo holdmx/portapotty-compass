@@ -5,11 +5,26 @@ A mobile, installable, offline compass that points to the nearest porta-potty
 
 ## What it does
 
-- Uses your phone's GPS + magnetometer to stream a trail of glowing dots in
-  the direction you need to walk to reach the nearest toilet bank (or "The
-  Man", or any bank you pick from the list). The trail marches faster the
-  closer you get, and hands over to a "you're here" pulse in the last few
-  metres, where GPS noise makes the bearing meaningless anyway.
+- Uses your phone's GPS + magnetometer to draw a **first-person pee stream**
+  aimed at the nearest toilet bank (or "The Man", or any bank you pick from
+  the list). The bottom edge of the screen is you; the stream arcs up over
+  the playa and bends toward the target — a little blue porta-potty that
+  walks in from the horizon as you close the distance.
+- The stream's pressure is the guidance signal:
+  `flow = alignment x urgency`. Face the john dead-on and the flow surges;
+  drift off-bearing and it decays through a dribble, lone drops, then
+  full "stage fright" (turn around). Urgency rises as you get closer —
+  at long range even good aim only manages sputtering drip-spurts.
+  Puddles accumulate where the stream lands and dry up when you move.
+- The last ~80 m, your stream starts landing on the porta-potty itself;
+  inside 12 m (where GPS noise makes bearings meaningless anyway) you get
+  the payoff: a firehose square into the door. Sweet relief.
+- The stream only fires in **Nearest 🚽** mode — that's the emergency.
+  Navigating to The Man or a hand-picked bank shows a dry marching-dash
+  guide instead (you only really NEED to go when it's the nearest one).
+- Honors `prefers-reduced-motion` (static arc, no animation), pauses when
+  the tab is hidden, and caps its particle counts — it has to sip battery
+  all day on playa.
 - Shows distance in feet or meters (tap the unit badge, top right).
 - Works **fully offline** once loaded — all 45 bank locations are baked into
   `data.js`, no network calls at runtime. Install it to your home screen
@@ -57,6 +72,17 @@ On iPhone: tap the Share icon → **Add to Home Screen** to install it as a
 standalone app icon. On first launch it'll ask permission for location and
 (iOS 13+) motion/compass access — grant both, then it works with the phone
 in airplane mode.
+
+### Testing far from the playa
+
+All real targets are in Black Rock City, so from anywhere else the app is
+permanently in "very far away" mode. Append **`?test`** to the URL and four
+synthetic johns are dropped around your first GPS fix: one exactly where
+you're standing (instant arrival — walk away and navigate back), plus 80 m,
+250 m and 700 m targets on spread bearings to exercise every flow regime.
+They're labeled `TEST · …` in the bank list. In test mode, hand-picking a
+TEST point from the list keeps the pee stream on (normally that's reserved
+for Nearest mode), so you can force any distance you want to walk.
 
 ## Files
 

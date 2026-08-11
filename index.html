@@ -12,7 +12,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 <meta name="apple-mobile-web-app-title" content="The Golden Compass" />
-<link rel="stylesheet" href="style.css?v=17" />
+<link rel="stylesheet" href="style.css?v=20" />
 </head>
 <body>
 
@@ -51,32 +51,11 @@
 
 <main>
   <div class="trail-wrap" id="trail-wrap">
-    <svg id="trail" viewBox="0 0 300 300" role="img" aria-label="Direction of travel to the selected toilet bank">
-      <defs>
-        <filter id="dotGlow" x="-160%" y="-160%" width="420%" height="420%">
-          <feGaussianBlur stdDeviation="4" result="b" />
-          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-      </defs>
-
-      <!-- Rotates so the dots stream toward the target. Dots march "up" in
-           this group's own coordinates; the rotation aims them. -->
-      <g id="trail-field">
-        <g id="dots">
-          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
-          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
-          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
-          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
-          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
-          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
-          <circle class="trail-dot" cx="150" cy="150" r="6.5" />
-        </g>
-      </g>
-
-      <circle class="arrived-pulse" cx="150" cy="150" r="26" />
-      <circle class="you-ring" cx="150" cy="150" r="15" />
-      <circle class="you" cx="150" cy="150" r="6.5" />
-    </svg>
+    <!-- First-person pee stream: bottom edge = you, the arc bends toward the
+         target and its pressure rises with alignment + proximity. Drawn
+         per-frame in app.js — see "the pee stream" section there. -->
+    <canvas id="scene" width="300" height="360" role="img"
+      aria-label="Stream direction indicator: the stream aims toward the selected toilet bank and strengthens as you face it and get closer"></canvas>
   </div>
 
   <div class="readout">
@@ -110,7 +89,7 @@
   add to your home screen before you lose signal.
 </footer>
 
-<script src="data.js?v=17"></script>
-<script src="app.js?v=17"></script>
+<script src="data.js?v=20"></script>
+<script src="app.js?v=20"></script>
 </body>
 </html>
