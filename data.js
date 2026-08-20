@@ -1,52 +1,55 @@
 // The Golden Compass — data
 // Toilet ("John") bank locations sourced from the official Burning Man Project
-// GIS release: https://github.com/burningmantech/innovate-GIS-data (2025/GeoJSON/toilets.geojson)
+// GIS release: https://github.com/burningmantech/innovate-GIS-data (2026/GeoJSON/toilets.geojson)
 // Each bank was published as a footprint polygon; the coordinate below is that
-// polygon's centroid. 45 banks, 2025 placement plan.
-// Bank layout is redrawn each year but historically shifts only modestly —
-// treat these as "close enough to walk toward" until the current year's
-// official map is out, then swap this file (see README).
-const TOILET_YEAR = 2025;
+// polygon's centroid. 45 banks, 2026 placement plan.
+//
+// NOTE: Black Rock City is re-sited each year. For 2026 the Golden Spike moved
+// ~1,900 ft south-west of its 2025 position, so every coordinate here differs
+// from the 2025 set by roughly that much even though the street grid and the
+// banks' addresses are largely unchanged. Never carry coordinates over from a
+// previous year — always regenerate from that year's GIS release.
+const TOILET_YEAR = 2026;
 
 // Bank names, in the same order as the coordinates below. Most banks sit
 // right at a real street intersection, so they're named the way Burning Man
 // itself names them: "{clock} & {letter}" (e.g. "430 & G" = 4:30 & G),
-// derived from the official 2025 street_lines.geojson (radial streets are
-// named by clock position, arc streets spell that year's theme — 2025 was
-// science-fiction authors, A=Atwood ... K=Kilgore).
+// derived from the official 2026 street_lines.geojson (radial streets are
+// named by clock position, annular streets by letter A-K, plus ESP for the
+// Esplanade and a 12:00 radial running out to deep playa).
 //
-// A handful of banks aren't near any real intersection — either inside the
-// Esplanade ring (no lettered streets there, so named for the nearest named
-// plaza/promenade) or out past the outermost street in the open "deep playa"
-// entrance near the DMZ / Point 3 perimeter markers (named landmark + the
-// compass direction from it, since that's genuinely how you'd find them).
+// Ten banks aren't near any real intersection — either inside the Esplanade
+// ring (no lettered streets there, so named for the nearest plaza/promenade)
+// or out past the outermost street near the DMZ / Point 3 markers, where
+// there is no grid at all (named landmark + compass direction from it, since
+// that is genuinely how you'd find them).
 const TOILET_LABELS = [
-'930 & H', '930 & D', '9 & D', '9 & H', '830 & G',
-'830 & C', '8 & D', '8 & G', '730 & C', '730 & H',
-'7 & G', '7 & C', '630 & D', '630 & G', '6 & H',
-'6 & C', '615 & B', '6 & B', '530 & D', '530 & G',
-'5 & G', '5 & D', '430 & I', '430 & C', '4 & C',
-'4 & G', '330 & H', '330 & C', '3 & H', '3 & D',
-'230 & C', '230 & H', '10 & G', '10 & B', '900 Promenade',
-'Man Plaza', '300 Promenade', '2 & F', '2 & B', 'Temple Plaza',
-'DMZ · ESE', 'DMZ · NNE', 'DMZ · WNW', 'DMZ · E', 'Point 3 · S',
+'930 & D', '930 & G', '230 & C', '230 & G', '3 & D',
+'3 & H', '330 & D', '4 & D', '330 & H', '4 & G',
+'430 & C', '430 & I', '5 & H', '5 & D', '530 & D',
+'530 & H', '6 & C', '6 & H', '630 & G', '630 & D',
+'7 & C', '7 & H', '730 & H', '730 & C', '8 & D',
+'8 & G', '830 & C', '9 & H', '9 & D', '2 & C',
+'2 & F', '10 & D', '10 & G', '300 Portal', 'Man Plaza',
+'900 Promenade', 'Temple Plaza', 'Point 3 · WSW', 'Point 3 · S', '12 & J',
+'DMZ · ENE', 'DMZ · SE', 'DMZ2 · SSE', 'DMZ2 · SSE II', '830 & F',
 ];
 
 const TOILETS = [
-[40.798873,-119.211993],[40.79572,-119.209571],[40.794418,-119.211908],[40.797104,-119.215931],
-[40.793807,-119.218238],[40.791968,-119.214035],[40.78973,-119.215845],[40.790525,-119.220026],
-[40.78708,-119.216106],[40.787062,-119.22183],[40.783563,-119.22034],[40.784487,-119.215702],
-[40.782106,-119.214526],[40.780263,-119.218559],[40.776707,-119.216247],[40.780392,-119.212411],
-[40.78118,-119.212037],[40.780521,-119.211516],[40.778263,-119.209446],[40.775052,-119.211616],
-[40.773839,-119.207619],[40.777303,-119.206284],[40.772584,-119.202816],[40.777012,-119.202924],
-[40.77738,-119.199528],[40.773899,-119.198344],[40.775219,-119.193846],[40.778409,-119.196387],
-[40.776925,-119.189618],[40.779887,-119.193015],[40.782119,-119.191654],[40.780213,-119.187245],
-[40.799989,-119.208015],[40.795374,-119.205686],[40.789821,-119.206417],[40.786705,-119.200265],
-[40.784226,-119.198799],[40.784273,-119.18656],[40.784911,-119.191161],[40.79114,-119.193264],
-[40.801382,-119.196232],[40.803629,-119.197903],[40.802915,-119.203693],[40.801305,-119.190902],
-[40.795203,-119.182015]
+[40.791956,-119.214308],[40.795078,-119.21659],[40.778457,-119.196689],[40.776584,-119.192384],
+[40.776077,-119.197616],[40.77319,-119.194469],[40.774664,-119.201162],[40.77361,-119.204233],
+[40.771482,-119.198692],[40.770133,-119.203138],[40.7733,-119.20781],[40.768811,-119.207603],
+[40.770075,-119.212438],[40.773616,-119.211241],[40.774515,-119.214228],[40.771457,-119.21693],
+[40.776688,-119.217291],[40.772967,-119.221135],[40.776509,-119.223403],[40.778375,-119.21936],
+[40.78075,-119.220499],[40.779869,-119.22533],[40.783356,-119.226769],[40.783364,-119.22098],
+[40.785963,-119.220549],[40.78682,-119.224942],[40.788328,-119.219111],[40.793483,-119.221054],
+[40.790721,-119.216639],[40.781064,-119.195469],[40.780647,-119.192131],[40.792969,-119.211619],
+[40.795928,-119.211212],[40.779886,-119.201909],[40.784183,-119.208596],[40.786079,-119.211331],
+[40.787852,-119.199337],[40.797015,-119.195055],[40.791013,-119.186478],[40.798507,-119.2063],
+[40.799598,-119.201567],[40.79833,-119.20278],[40.77698,-119.183363],[40.777149,-119.18338],
+[40.789703,-119.222211]
 ].map((c, i) => ({ id: i, lat: c[0], lng: c[1], label: TOILET_LABELS[i] }));
 
-// Golden Spike — the surveyed center point of Black Rock City, 2025.
-// Source: https://innovate.burningman.org/dataset/2025-golden-spike-and-general-city-map-data/
-const GOLDEN_SPIKE = { id: 'man', lat: 40.786958, lng: -119.202994, label: 'The Man (Golden Spike)' };
+// Golden Spike — the surveyed center point of Black Rock City, 2026.
+// Source: https://github.com/burningmantech/innovate-GIS-data (2026/GeoJSON/cpns.geojson)
+const GOLDEN_SPIKE = { id: 'man', lat: 40.783247, lng: -119.207884, label: 'The Man (Golden Spike)' };

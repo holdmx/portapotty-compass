@@ -19,17 +19,20 @@ there is no compass dial; it points with a marching trail of dots.
 
 ## Data source
 
-Bank coordinates are centroids computed from the **official 2025 Burning Man
+Bank coordinates are centroids computed from the **official 2026 Burning Man
 Project GIS release**:
-https://github.com/burningmantech/innovate-GIS-data (`2025/GeoJSON/toilets.geojson`)
+https://github.com/burningmantech/innovate-GIS-data (`2026/GeoJSON/toilets.geojson`)
 
-The Man / Golden Spike coordinate is from the same org's
-[2025 Golden Spike dataset](https://innovate.burningman.org/dataset/2025-golden-spike-and-general-city-map-data/).
+The Man / Golden Spike coordinate comes from the same release
+(`2026/GeoJSON/cpns.geojson`).
 
-Burning Man re-surveys and republishes this data shortly before each event
-(historically ~July). Bank placement tends to be similar year over year but
-**is not guaranteed** — treat this as "close enough to walk toward," confirm
-against on-playa signage, and swap in the new year's file once it drops:
+**Coordinates do not carry over between years.** Black Rock City is re-sited
+on the playa each year: for 2026 the Golden Spike moved ~1,900 ft south-west
+of where it stood in 2025, which shifted every bank by roughly that much even
+though the street grid and most of the banks' addresses were unchanged. A
+2025 dataset would have sent people a third of a mile wrong. Always
+regenerate from the current year's release rather than assuming things
+"didn't move much":
 
 1. Get `toilets.geojson` for the current year from
    [innovate.burningman.org/datasets-page](https://innovate.burningman.org/datasets-page/)
