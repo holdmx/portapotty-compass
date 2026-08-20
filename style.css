@@ -340,6 +340,19 @@ footer {
 
 footer a { color: var(--cream-dim); }
 
+footer p { margin: 0; }
+
+/* Slightly brighter and spaced off the data credit so the byline reads as a
+   byline rather than more fine print. */
+.credit {
+  color: var(--cream);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  opacity: 0.85;
+  margin-bottom: 8px;
+}
+
 .unit-toggle {
   position: absolute;
   top: 46px;
